@@ -21,7 +21,9 @@ conn.connect((err) => {
     if (err) throw err;
     console.log('Mysql Connected...');
 });
-
+app.get('/', (req, res) => {
+    res.send('Welcome to sales api');
+});
 //Get settlement report
 app.post('/api/settlement/report', (req, res) => {
     const payload = _.get(req.body, 'payload', false);
