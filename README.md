@@ -1,4 +1,4 @@
-# api_product_sales_report
+# Sales API
 Sales settlement report api
 ## Installation
 ```bash
