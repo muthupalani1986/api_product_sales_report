@@ -6,7 +6,12 @@ const _ = require('lodash');
 
 // parse application/json
 app.use(bodyParser.json());
-
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods',' GET, POST, PUT');
+    next();
+  });
 
 //create database connection
 const conn = mysql.createConnection({
@@ -129,6 +134,7 @@ app.post('/api/settlement/save', (req, res) => {
         if (!err) {
             res.json({ 'satus': 200 });
         } else {
+            console.log(err.stack);
             res.json({ 'satus': 404, 'error': 'Mysql Error' });
         }
     });
