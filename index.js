@@ -39,7 +39,7 @@ app.post('/api/settlement/report', (req, res) => {
     }
     let query = conn.query(sql, (err, results) => {
         if (err) {
-            res.json({ 'satus': 404, 'error': 'Mysql Error' });
+            res.json({ 'status': 404, 'error': 'Mysql Error' });
         } else {
             res.json({ "status": 200, "error": null, "response": results });
         }
@@ -133,10 +133,10 @@ app.post('/api/settlement/save', (req, res) => {
     });
     conn.query(sqlQuery, [sqlColumnValues], function (err) {
         if (!err) {
-            res.json({ 'satus': 200 });
+            res.json({ 'status': 200 });
         } else {
             console.log(err.stack);
-            res.json({ 'satus': 404, 'error': 'Mysql Error' });
+            res.json({ 'status': 404, 'error': 'Mysql Error' });
         }
     });
 
