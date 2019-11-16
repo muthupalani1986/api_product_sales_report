@@ -32,18 +32,19 @@ app.get('/', (req, res) => {
 });
 //Get settlement report
 app.post('/api/settlement/report', (req, res) => {
-    const payload = _.get(req.body, 'payload', false);
-    let sql = 'SELECT * FROM settlement';
-    if (payload) {
-        sql = sql + ' where `settlement-start-date` between "' + payload.start_date + '" and "' + payload.end_date + '"';
+    const payload = _.get(req.body, 'payload', false);    
+    if (!payload) {
+        res.sendStatus(404);
+        return;
     }
-    let query = conn.query(sql, (err, results) => {
+    let sql = payload.query;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    let query = conn.query(sql, (err, results,fields) => {
         if (err) {
             res.json({ 'status': 404, 'error': 'Mysql Error' });
         } else {
-            res.json({ "status": 200, "error": null, "response": results });
+            res.json({ "status": 200, "error": null, "response": results,"fields":fields });
         }
-    });
+    })  ; 
 });
 
 //Save sales report
@@ -140,6 +141,63 @@ app.post('/api/settlement/save', (req, res) => {
         }
     });
 
+});
+
+//Save query
+app.post('/api/query/save', (req, res) => {
+    const payload = _.get(req.body, 'payload', false);
+    if (!payload) {
+        res.sendStatus(404);
+        return;
+    }
+    let sqlQuery = 'INSERT INTO queries (`description`,`query`) VALUES ?';
+    let sqlColumnValues = [];
+    let columnValue=[];
+    const description=payload.query.description;
+    const query=payload.query.query;
+    columnValue.push(description);
+    columnValue.push(query);
+    sqlColumnValues.push(columnValue);    
+    conn.query(sqlQuery, [sqlColumnValues], function (err) {
+        if (!err) {
+            res.json({ 'status': 200 });
+        } else {
+            console.log(err.stack);
+            res.json({ 'status': 404, 'error': 'Mysql Error' });
+        }
+    });
+
+});
+
+//Get all query
+app.post('/api/query/all', (req, res) => {
+    
+    let sql = 'select * from queries order by createts desc';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    let query = conn.query(sql, (err, results) => {
+        if (err) {
+            res.json({ 'status': 404, 'error': 'Mysql Error' });
+        } else {
+            res.json({ "status": 200, "error": null, "response": results});
+        }
+    }); 
+});
+
+//Delete query
+app.post('/api/query/delete', (req, res) => {
+    const payload = _.get(req.body, 'payload', false);
+    if (!payload) {
+        res.sendStatus(404);
+        return;
+    }
+    const id= _.get(payload, 'id', '');
+    let sql = 'delete from queries where id='+id;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    let query = conn.query(sql, (err, results,fields) => {
+        if (err) {
+            res.json({ 'status': 404, 'error': 'Mysql Error' });
+        } else {
+            res.json({ "status": 200, "error": null, "response": 'Success'});
+        }
+    }); 
 });
 
 //Server listening
